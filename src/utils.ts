@@ -44,7 +44,7 @@ export function isValidMoveForPiece(
         Math.abs(y - targetY) <= 1 &&
         (x !== targetX || y !== targetY)
       );
-    case "pawn":
+    case "pawn": {
       const initialPawnRow = 6;
       const isInitialPosition = piece.location[0] === initialPawnRow;
       const forwardMove = targetX === x - 1 && y === targetY;
@@ -54,7 +54,8 @@ export function isValidMoveForPiece(
         y === targetY &&
         isPathClear([x, y], [targetX, targetY]);
       return forwardMove || doubleForwardMove;
-    case "queen":
+    }
+    case "queen": {
       const isSameRow = x === targetX;
       const isSameColumn = y === targetY;
       const isSameDiagonal = Math.abs(x - targetX) === Math.abs(y - targetY);
@@ -63,16 +64,18 @@ export function isValidMoveForPiece(
         !isEqualCoord([x, y], [targetX, targetY]) &&
         isPathClear([x, y], [targetX, targetY])
       );
+    }
     case "bishop":
       return (
         Math.abs(x - targetX) === Math.abs(y - targetY) &&
         !isEqualCoord([x, y], [targetX, targetY]) &&
         isPathClear([x, y], [targetX, targetY])
       );
-    case "knight":
+    case "knight": {
       const dx = Math.abs(x - targetX);
       const dy = Math.abs(y - targetY);
       return (dx === 2 && dy === 1) || (dx === 1 && dy === 2);
+    }
     case "rook":
       return (
         (x === targetX || y === targetY) &&
