@@ -10,7 +10,7 @@ import { renderSquares } from "./render-squares";
 export type Coord = [number, number];
 
 export type PieceRecord = {
-  id: string; // Add an id to uniquely identify each piece
+  id: string;
   type: PieceType;
   location: Coord;
 };
