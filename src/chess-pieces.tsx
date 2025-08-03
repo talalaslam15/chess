@@ -116,8 +116,8 @@ const imageStyles = css({
   // Responsive piece sizing - adapts to square size
   width: "85%",
   height: "85%",
-  maxWidth: "90px",
-  maxHeight: "90px",
+  minWidth: "20px", // Minimum size to ensure visibility at extreme zoom levels
+  minHeight: "20px",
   objectFit: "contain",
   userSelect: "none",
   transition: "transform 0.1s ease",
@@ -131,11 +131,15 @@ const imageStyles = css({
   "@media (max-width: 768px)": {
     width: "80%",
     height: "80%",
+    minWidth: "18px", // Slightly smaller minimum for mobile
+    minHeight: "18px",
   },
 
   // Very small screens
   "@media (max-width: 480px)": {
     width: "75%",
     height: "75%",
+    minWidth: "16px", // Even smaller minimum for very small screens
+    minHeight: "16px",
   },
 });
