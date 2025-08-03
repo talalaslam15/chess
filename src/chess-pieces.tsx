@@ -1,47 +1,106 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import king from "/king.png";
-import pawn from "/pawn.png";
-import queen from "/queen.png";
-import bishop from "/bishop.png";
-import knight from "/knight.png";
-import rook from "/rook.png";
+// White pieces
+import whiteKing from "/king.png";
+import whitePawn from "/pawn.png";
+import whiteQueen from "/queen.png";
+import whiteBishop from "/bishop.png";
+import whiteKnight from "/knight.png";
+import whiteRook from "/rook.png";
+// Black pieces
+import blackKing from "/black/king.png";
+import blackPawn from "/black/pawn.png";
+import blackQueen from "/black/queen.png";
+import blackBishop from "/black/bishop.png";
+import blackKnight from "/black/knight.png";
+import blackRook from "/black/rook.png";
 import { type ReactElement } from "react";
+import { ChessColor, PieceType } from "./types/chess";
 
-export type PieceType =
-  | "king"
-  | "pawn"
-  | "queen"
-  | "bishop"
-  | "knight"
-  | "rook";
+export type { PieceType } from "./types/chess";
 
-export const pieceLookup: { [Key in PieceType]: () => ReactElement } = {
-  king: () => <King />,
-  pawn: () => <Pawn />,
-  queen: () => <Queen />,
-  bishop: () => <Bishop />,
-  knight: () => <Knight />,
-  rook: () => <Rook />,
+const pieceImages = {
+  w: {
+    king: whiteKing,
+    queen: whiteQueen,
+    rook: whiteRook,
+    bishop: whiteBishop,
+    knight: whiteKnight,
+    pawn: whitePawn,
+  },
+  b: {
+    king: blackKing,
+    queen: blackQueen,
+    rook: blackRook,
+    bishop: blackBishop,
+    knight: blackKnight,
+    pawn: blackPawn,
+  },
+} as const;
+
+export const pieceLookup: {
+  [Key in PieceType]: (color: ChessColor) => ReactElement;
+} = {
+  king: (color) => <King color={color} />,
+  pawn: (color) => <Pawn color={color} />,
+  queen: (color) => <Queen color={color} />,
+  bishop: (color) => <Bishop color={color} />,
+  knight: (color) => <Knight color={color} />,
+  rook: (color) => <Rook color={color} />,
 };
-export function King() {
-  return <Piece image={king} alt="King" />;
-}
-export function Queen() {
-  return <Piece image={queen} alt="Queen" />;
-}
-export function Knight() {
-  return <Piece image={knight} alt="Knight" />;
-}
-export function Bishop() {
-  return <Piece image={bishop} alt="Bishop" />;
-}
-export function Rook() {
-  return <Piece image={rook} alt="Rook" />;
+
+interface PieceComponentProps {
+  color: ChessColor;
 }
 
-export function Pawn() {
-  return <Piece image={pawn} alt="Pawn" />;
+export function King({ color }: PieceComponentProps) {
+  return (
+    <Piece
+      image={pieceImages[color].king}
+      alt={`${color === "w" ? "White" : "Black"} King`}
+    />
+  );
+}
+export function Queen({ color }: PieceComponentProps) {
+  return (
+    <Piece
+      image={pieceImages[color].queen}
+      alt={`${color === "w" ? "White" : "Black"} Queen`}
+    />
+  );
+}
+export function Knight({ color }: PieceComponentProps) {
+  return (
+    <Piece
+      image={pieceImages[color].knight}
+      alt={`${color === "w" ? "White" : "Black"} Knight`}
+    />
+  );
+}
+export function Bishop({ color }: PieceComponentProps) {
+  return (
+    <Piece
+      image={pieceImages[color].bishop}
+      alt={`${color === "w" ? "White" : "Black"} Bishop`}
+    />
+  );
+}
+export function Rook({ color }: PieceComponentProps) {
+  return (
+    <Piece
+      image={pieceImages[color].rook}
+      alt={`${color === "w" ? "White" : "Black"} Rook`}
+    />
+  );
+}
+
+export function Pawn({ color }: PieceComponentProps) {
+  return (
+    <Piece
+      image={pieceImages[color].pawn}
+      alt={`${color === "w" ? "White" : "Black"} Pawn`}
+    />
+  );
 }
 
 type PieceProps = {
@@ -52,10 +111,31 @@ type PieceProps = {
 function Piece({ image, alt }: PieceProps) {
   return <img css={imageStyles} src={image} alt={alt} draggable="false" />; // draggable set to false to prevent dragging of the images
 }
+
 const imageStyles = css({
-  width: 100,
-  height: 100,
+  // Responsive piece sizing - adapts to square size
+  width: "85%",
+  height: "85%",
+  maxWidth: "90px",
+  maxHeight: "90px",
+  objectFit: "contain",
+  userSelect: "none",
+  transition: "transform 0.1s ease",
+
   "&:hover": {
     cursor: "pointer",
+    transform: "scale(1.05)",
+  },
+
+  // Mobile optimizations
+  "@media (max-width: 768px)": {
+    width: "80%",
+    height: "80%",
+  },
+
+  // Very small screens
+  "@media (max-width: 480px)": {
+    width: "75%",
+    height: "75%",
   },
 });
