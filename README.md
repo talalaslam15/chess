@@ -2,7 +2,7 @@
 
 A modern, responsive chess game built with React, TypeScript, and chess.js. Features a complete chess implementation with proper rule validation, real-time gameplay, and a beautiful user interface that works across all devices.
 
-![Chess Game Screenshot](/vitest/chess.jpg)
+![Chess Game Screenshot](/public/chess.jpg)
 
 ## 🚀 Features
 
