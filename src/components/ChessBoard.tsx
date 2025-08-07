@@ -47,7 +47,7 @@ const chessboardStyles = css({
   display: "grid",
   gridTemplateColumns: "repeat(8, 1fr)",
   gridTemplateRows: "repeat(8, 1fr)",
-  border: "3px solid #8B4513",
+  border: "3px solid #432dd0",
   borderRadius: "4px",
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
   backgroundColor: "#fff",
@@ -138,7 +138,7 @@ const moveIndicatorStyles = css({
   width: "30%",
   height: "30%",
   borderRadius: "50%",
-  backgroundColor: "rgba(0, 128, 0, 0.7)",
+  backgroundColor: "#00786f",
   pointerEvents: "none",
   zIndex: 1,
 });
@@ -211,10 +211,10 @@ function ChessBoard() {
             css={squareStyles}
             style={{
               backgroundColor: isSelected
-                ? "#ffeb3b"
+                ? "#fccee8"
                 : isDark
-                ? "#d2b48c"
-                : "#f5deb3",
+                ? "#5596f2"
+                : "#f2f6fa",
             }}
             onClick={() => handleSquareClick(coord)}
           >
