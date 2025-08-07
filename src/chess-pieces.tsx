@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 // White pieces
-import whiteKing from "/king.png";
-import whitePawn from "/pawn.png";
-import whiteQueen from "/queen.png";
-import whiteBishop from "/bishop.png";
-import whiteKnight from "/knight.png";
-import whiteRook from "/rook.png";
+import whiteKing from "/white/king.png";
+import whitePawn from "/white/pawn.png";
+import whiteQueen from "/white/queen.png";
+import whiteBishop from "/white/bishop.png";
+import whiteKnight from "/white/knight.png";
+import whiteRook from "/white/rook.png";
 // Black pieces
 import blackKing from "/black/king.png";
 import blackPawn from "/black/pawn.png";
