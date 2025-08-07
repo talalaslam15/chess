@@ -4,6 +4,7 @@ import { useChessGame } from "../hooks/useChessGame";
 import { pieceLookup } from "../chess-pieces";
 import { MoveHistory } from "./MoveHistory";
 import { CapturedPieces } from "./CapturedPieces";
+import { PromotionModal } from "./PromotionModal";
 
 // Main container styles
 const containerStyles = css({
@@ -163,11 +164,13 @@ function ChessBoard() {
     capturedPieces,
     makeMove,
     resetGame,
+    promotePawn,
     isSquareSelected,
     isValidMoveTarget,
     getPieceAt,
     selectedSquare,
     setSelectedSquare,
+    promotionPending,
   } = useChessGame();
 
   const handleSquareClick = (coord: [number, number]) => {
@@ -323,6 +326,16 @@ function ChessBoard() {
           </div>
         </div>
       </div>
+
+      {/* Promotion Modal */}
+      {promotionPending && (
+        <PromotionModal
+          color={promotionPending.color}
+          onSelect={(pieceType) => {
+            promotePawn(pieceType);
+          }}
+        />
+      )}
     </div>
   );
 }

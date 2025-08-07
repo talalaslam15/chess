@@ -51,6 +51,7 @@ export interface ChessGameHook {
   // Actions
   makeMove: (from: [number, number], to: [number, number]) => boolean;
   resetGame: () => void;
+  promotePawn: (pieceType: "queen" | "rook" | "bishop" | "knight") => void;
 
   // Helpers
   isSquareSelected: (coord: [number, number]) => boolean;
@@ -62,6 +63,13 @@ export interface ChessGameHook {
   // UI state
   selectedSquare: [number, number] | null;
   setSelectedSquare: (coord: [number, number] | null) => void;
+
+  // Promotion state
+  promotionPending: {
+    from: [number, number];
+    to: [number, number];
+    color: ChessColor;
+  } | null;
 }
 
 export const useChessGame = (): ChessGameHook => {
@@ -73,6 +81,11 @@ export const useChessGame = (): ChessGameHook => {
   const [capturedPieces, setCapturedPieces] = useState<
     Array<{ type: PieceType; color: ChessColor }>
   >([]);
+  const [promotionPending, setPromotionPending] = useState<{
+    from: [number, number];
+    to: [number, number];
+    color: ChessColor;
+  } | null>(null);
 
   // Force re-render when game state changes
   const forceUpdate = useCallback(() => {
@@ -128,10 +141,29 @@ export const useChessGame = (): ChessGameHook => {
         const fromSquare = coordToSquare(from);
         const toSquare = coordToSquare(to);
 
+        // Check if this move would result in pawn promotion
+        const piece = chess.get(fromSquare);
+        if (piece && piece.type === "p") {
+          // Check if pawn is moving to promotion rank
+          const isPromotion =
+            (piece.color === "w" && to[0] === 0) ||
+            (piece.color === "b" && to[0] === 7);
+
+          if (isPromotion) {
+            // Store promotion details and wait for user to choose piece
+            setPromotionPending({
+              from,
+              to,
+              color: piece.color,
+            });
+            setSelectedSquare(null);
+            return true; // Move is valid, but waiting for promotion choice
+          }
+        }
+
         const move = chess.move({
           from: fromSquare,
           to: toSquare,
-          promotion: "q", // Always promote to queen for now
         });
 
         if (move) {
@@ -158,10 +190,54 @@ export const useChessGame = (): ChessGameHook => {
     [chess, forceUpdate]
   );
 
+  const promotePawn = useCallback(
+    (pieceType: "queen" | "rook" | "bishop" | "knight") => {
+      if (!promotionPending) return;
+
+      try {
+        const fromSquare = coordToSquare(promotionPending.from);
+        const toSquare = coordToSquare(promotionPending.to);
+
+        // Map piece type to chess.js symbols
+        const promotionMap = {
+          queen: "q",
+          rook: "r",
+          bishop: "b",
+          knight: "n",
+        };
+
+        const move = chess.move({
+          from: fromSquare,
+          to: toSquare,
+          promotion: promotionMap[pieceType],
+        });
+
+        if (move) {
+          // Track captured pieces
+          if (move.captured) {
+            const capturedPieceType = pieceSymbolToType(move.captured);
+            const capturedPieceColor = move.color === "w" ? "b" : "w";
+            setCapturedPieces((prev) => [
+              ...prev,
+              { type: capturedPieceType, color: capturedPieceColor },
+            ]);
+          }
+
+          setPromotionPending(null);
+          forceUpdate();
+        }
+      } catch (error) {
+        console.error("Invalid promotion:", error);
+      }
+    },
+    [chess, promotionPending, forceUpdate]
+  );
+
   const resetGame = useCallback(() => {
     chess.reset();
     setSelectedSquare(null);
     setCapturedPieces([]);
+    setPromotionPending(null);
     forceUpdate();
   }, [chess, forceUpdate]);
 
@@ -210,10 +286,12 @@ export const useChessGame = (): ChessGameHook => {
     capturedPieces,
     makeMove,
     resetGame,
+    promotePawn,
     isSquareSelected,
     isValidMoveTarget,
     getPieceAt,
     selectedSquare,
     setSelectedSquare,
+    promotionPending,
   };
 };
