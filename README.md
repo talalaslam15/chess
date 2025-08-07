@@ -4,6 +4,8 @@ A modern, responsive chess game built with React, TypeScript, and chess.js. Feat
 
 ![Chess Game Screenshot](/public/chess.jpg)
 
+## 🌐 [Live Demo](https://talalaslam15.github.io/chess/)
+
 ## 🚀 Features
 
 ### ✅ Implemented Features
